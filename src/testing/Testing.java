@@ -19,8 +19,9 @@ public class Testing {
         
         for(int i = 0; i < vectorTest.length; i++){
             builder.append(" Vector: ").append(i).append(" Content: ").append(vectorTest[i]);
-            counter += vectorTest.length;
         }
+        
+        counter += vectorTest.length;
         
         return builder.toString();
     }
