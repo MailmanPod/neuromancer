@@ -12,7 +12,6 @@ public class Testing {
 
     private static int counter = 0;
     private static String name = "Neuromancer Class";
-    private static String name2 = "Hola Mundo";
     
     private static String ter(double[] vectorTest){
         StringBuilder builder = new StringBuilder();
