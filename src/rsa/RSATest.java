@@ -19,19 +19,24 @@ public class RSATest
    public static void main(String[] args) 
       throws IOException, GeneralSecurityException, ClassNotFoundException
    {
-       args = new String[10];
+       args = new String[5];
+       
        args[0] = "-genkey";
        args[1] = "RSAPublic.key";
        args[2] = "RSAPrivate.key";
        
        /*args[0] = "-encrypt";
-       args[1] = "Pinchila Test.txt";
-       args[2] = "Pinchila.crypto";
+       //args[1] = "Pinchila Test.txt";
+       args[1] = "D:\\Java Examples\\jce_policy-6.zip";
+       //args[2] = "Pinchila.crypto";
+       args[2] = "D:\\Java Examples\\jce_policy-6.crypto";
        args[3] = "RSAPublic.key";*/
        
        /*args[0] = "-decrypt";
-       args[1] = "Pinchila.crypto";
-       args[2] = "Pinchila Test.txt";
+       //args[1] = "Pinchila.crypto";
+       args[1] = "D:\\Java Examples\\jce_policy-6.crypto";
+       //args[2] = "Pinchila Test.txt";
+       args[2] = "D:\\Java Examples\\jce_policy-6.zip";
        args[3] = "RSAPrivate.key";*/
        
       if (args[0].equals("-genkey"))
