@@ -5,9 +5,7 @@
 package testing;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -20,11 +18,11 @@ public class Testing {
     private static int counter = 0;
     private static String name = "Neuromancer Class";
     
-    private static String fileName = "D:\\Archivos\\Programacion\\Diseño de Lenguaje de Consulta (DLC)\\Clases\\"
+    private static final String fileName = "D:\\Archivos\\Programacion\\Diseño de Lenguaje de Consulta (DLC)\\Clases\\"
             + "Semana 08 [Compresor]\\Semana 08 [Compresor]\\"
             + "DLC10-Compresor\\src\\compresor\\Compresor.java";
     
-    private static String en = "D:\\Archivos\\Programacion\\Diseño de Lenguaje de Consulta (DLC)\\Clases\\"
+    private static final String en = "D:\\Archivos\\Programacion\\Diseño de Lenguaje de Consulta (DLC)\\Clases\\"
             + "Semana 08 [Compresor]\\Semana 08 [Compresor]\\"
             + "DLC10-Compresor\\src\\compresor\\Compresor.crypto";
 
