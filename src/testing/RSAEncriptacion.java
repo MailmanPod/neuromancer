@@ -4,7 +4,9 @@
  */
 package testing;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -17,6 +19,8 @@ import java.security.spec.RSAPublicKeySpec;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
 /**
@@ -43,7 +47,7 @@ public class RSAEncriptacion {
         return keys;
     }
 
-    private RSAPublicKey obtenPublicKey(BigInteger modulo, BigInteger exponente)
+    public RSAPublicKey obtenPublicKey(BigInteger modulo, BigInteger exponente)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeyFactory fact = KeyFactory.getInstance(ALGORITMO);
         RSAPublicKeySpec publicKey = new RSAPublicKeySpec(modulo, exponente);
@@ -61,11 +65,34 @@ public class RSAEncriptacion {
         String textoEncriptado = new String(charEncriptado);
         return textoEncriptado;
     }
+    
+    public String encriptarPrivado(String texto, RSAPrivateKey privateKey) throws NoSuchAlgorithmException, NoSuchPaddingException, 
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
+        
+        Cipher cipher = Cipher.getInstance(ALGORITMO);
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        byte[] cifrado = cipher.doFinal(texto.getBytes());
+        char[] charEncriptado = Hex.encodeHex(cifrado);
+        String textoEncriptado = new String(charEncriptado);
+        return textoEncriptado;
+    }
 
     public String desencriptar(String decript, RSAPrivateKey privateKey)
             throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITMO);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        byte[] desencriptado = Hex.decodeHex(decript.toCharArray());
+        byte[] desci = cipher.doFinal(desencriptado);
+        return new String(desci, CODIFICACION);
+    }
+    
+    public String desencriptarPublico(String decript, BigInteger modulo, BigInteger exponente) throws NoSuchAlgorithmException, 
+            InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, DecoderException, 
+            IllegalBlockSizeException, UnsupportedEncodingException, BadPaddingException{
+        
+        RSAPublicKey publicKey = obtenPublicKey(modulo, exponente);
+        Cipher cipher = Cipher.getInstance(ALGORITMO);
+        cipher.init(Cipher.DECRYPT_MODE, publicKey);
         byte[] desencriptado = Hex.decodeHex(decript.toCharArray());
         byte[] desci = cipher.doFinal(desencriptado);
         return new String(desci, CODIFICACION);

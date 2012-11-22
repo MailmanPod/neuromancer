@@ -117,13 +117,15 @@ public class Testing {
 
         String password = "RSA Trola";
 
-        String e = encriptacion.encriptar(password, keys.getModulus(), keys.getExponente());
+        //String e = encriptacion.encriptar(password, keys.getModulus(), keys.getExponente());
+        String e = encriptacion.encriptarPrivado(password, keys.getPrivateKey());
         
         System.out.println("Encriptado: " + e);
         encryption(e);
 
-        String encsas = desencryption(e); 
-        String d = encriptacion.desencriptar(encsas, keys.getPrivateKey());
+        String encsas = desencryption(e);
+        //String d = encriptacion.desencriptar(encsas, keys.getPrivateKey());
+        String d = encriptacion.desencriptarPublico(encsas, keys.getModulus(), keys.getExponente());
         
         System.out.println("Desecriptado: " + d);
 
