@@ -19,9 +19,11 @@ public class Testing {
 
     private static int counter = 0;
     private static String name = "Neuromancer Class";
+    
     private static String fileName = "D:\\Archivos\\Programacion\\Diseño de Lenguaje de Consulta (DLC)\\Clases\\"
             + "Semana 08 [Compresor]\\Semana 08 [Compresor]\\"
             + "DLC10-Compresor\\src\\compresor\\Compresor.java";
+    
     private static String en = "D:\\Archivos\\Programacion\\Diseño de Lenguaje de Consulta (DLC)\\Clases\\"
             + "Semana 08 [Compresor]\\Semana 08 [Compresor]\\"
             + "DLC10-Compresor\\src\\compresor\\Compresor.crypto";
