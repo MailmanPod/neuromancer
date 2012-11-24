@@ -20,7 +20,6 @@ package testing;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,42 +41,39 @@ import org.apache.commons.net.io.CopyStreamListener;
 import org.apache.commons.net.util.TrustManagerUtils;
 
 /**
- * This is an example program demonstrating how to use the FTPClient class.
- * This program connects to an FTP server and retrieves the specified
- * file.  If the -s flag is used, it stores the local file at the FTP server.
- * Just so you can see what's happening, all reply strings are printed.
- * If the -b flag is used, a binary transfer is assumed (default is ASCII).
- * See below for further options.
+ * This is an example program demonstrating how to use the FTPClient class. This
+ * program connects to an FTP server and retrieves the specified file. If the -s
+ * flag is used, it stores the local file at the FTP server. Just so you can see
+ * what's happening, all reply strings are printed. If the -b flag is used, a
+ * binary transfer is assumed (default is ASCII). See below for further options.
  */
-public final class FTPClientExample
-{
+public final class FTPClientExample {
 
     public static final String USAGE =
-        "Usage: ftp [options] <hostname> <username> <password> [<remote file> [<local file>]]\n" +
-        "\nDefault behavior is to download a file and use ASCII transfer mode.\n" +
-        "\t-a - use local active mode (default is local passive)\n" +
-        "\t-b - use binary transfer mode\n" +
-        "\t-c cmd - issue arbitrary command (remote is used as a parameter if provided) \n" +
-        "\t-d - list directory details using MLSD (remote is used as the pathname if provided)\n" +
-        "\t-e - use EPSV with IPv4 (default false)\n" +
-        "\t-f - issue FEAT command (remote and local files are ignored)\n" +
-        "\t-h - list hidden files (applies to -l and -n only)\n" +
-        "\t-k secs - use keep-alive timer (setControlKeepAliveTimeout)\n" +
-        "\t-l - list files using LIST (remote is used as the pathname if provided)\n" +
-        "\t-L - use lenient future dates (server dates may be up to 1 day into future)\n" +
-        "\t-n - list file names using NLST (remote is used as the pathname if provided)\n" +
-        "\t-p true|false|protocol[,true|false] - use FTPSClient with the specified protocol and/or isImplicit setting\n" +
-        "\t-s - store file on server (upload)\n" +
-        "\t-t - list file details using MLST (remote is used as the pathname if provided)\n" +
-        "\t-w msec - wait time for keep-alive reply (setControlKeepAliveReplyTimeout)\n" +
-        "\t-T  all|valid|none - use one of the built-in TrustManager implementations (none = JVM default)\n" +
-        "\t-PrH server[:port] - HTTP Proxy host and optional port[80] \n" +
-        "\t-PrU user - HTTP Proxy server username\n" +
-        "\t-PrP password - HTTP Proxy server password\n" +
-        "\t-# - add hash display during transfers\n";
+            "Usage: ftp [options] <hostname> <username> <password> [<remote file> [<local file>]]\n"
+            + "\nDefault behavior is to download a file and use ASCII transfer mode.\n"
+            + "\t-a - use local active mode (default is local passive)\n"
+            + "\t-b - use binary transfer mode\n"
+            + "\t-c cmd - issue arbitrary command (remote is used as a parameter if provided) \n"
+            + "\t-d - list directory details using MLSD (remote is used as the pathname if provided)\n"
+            + "\t-e - use EPSV with IPv4 (default false)\n"
+            + "\t-f - issue FEAT command (remote and local files are ignored)\n"
+            + "\t-h - list hidden files (applies to -l and -n only)\n"
+            + "\t-k secs - use keep-alive timer (setControlKeepAliveTimeout)\n"
+            + "\t-l - list files using LIST (remote is used as the pathname if provided)\n"
+            + "\t-L - use lenient future dates (server dates may be up to 1 day into future)\n"
+            + "\t-n - list file names using NLST (remote is used as the pathname if provided)\n"
+            + "\t-p true|false|protocol[,true|false] - use FTPSClient with the specified protocol and/or isImplicit setting\n"
+            + "\t-s - store file on server (upload)\n"
+            + "\t-t - list file details using MLST (remote is used as the pathname if provided)\n"
+            + "\t-w msec - wait time for keep-alive reply (setControlKeepAliveReplyTimeout)\n"
+            + "\t-T  all|valid|none - use one of the built-in TrustManager implementations (none = JVM default)\n"
+            + "\t-PrH server[:port] - HTTP Proxy host and optional port[80] \n"
+            + "\t-PrU user - HTTP Proxy server username\n"
+            + "\t-PrP password - HTTP Proxy server password\n"
+            + "\t-# - add hash display during transfers\n";
 
-    public static final void main(String[] args)
-    {
+    public static final void main(String[] args) {
         boolean storeFile = false, binaryTransfer = false, error = false, listFiles = false, listNames = false, hidden = false;
         boolean localActive = false, useEpsvWithIPv4 = false, feat = false, printHash = false;
         boolean mlst = false, mlsd = false;
@@ -94,91 +90,92 @@ public final class FTPClientExample
         String proxyPassword = null;
 
         args = new String[100];
-        
-        args[0] = "-b";
+
+        args[0] = "-d";
         args[1] = "localhost";
         args[2] = "adminroot";
         args[3] = "adminroot";
-        
+
         args[4] = "RSAPrivate.key";
         args[5] = ".\\FTPServer2\\RSAPrivate.key";
 
         int base = 0;
-        for (base = 0; base < args.length; base++)
-        {
-            if (args[base].equals("-s")) {
-                storeFile = true;
-            }
-            else if (args[base].equals("-a")) {
-                localActive = true;
-            }
-            else if (args[base].equals("-b")) {
-                binaryTransfer = true;
-            }
-            else if (args[base].equals("-c")) {
-                doCommand = args[++base];
-                minParams = 3;
-            }
-            else if (args[base].equals("-d")) {
-                mlsd = true;
-                minParams = 3;
-            }
-            else if (args[base].equals("-e")) {
-                useEpsvWithIPv4 = true;
-            }
-            else if (args[base].equals("-f")) {
-                feat = true;
-                minParams = 3;
-            }
-            else if (args[base].equals("-h")) {
-                hidden = true;
-            }
-            else if (args[base].equals("-k")) {
-                keepAliveTimeout = Long.parseLong(args[++base]);
-            }
-            else if (args[base].equals("-l")) {
-                listFiles = true;
-                minParams = 3;
-            }
-            else if (args[base].equals("-L")) {
-                lenient = true;
-            }
-            else if (args[base].equals("-n")) {
-                listNames = true;
-                minParams = 3;
-            }
-            else if (args[base].equals("-p")) {
-                protocol = args[++base];
-            }
-            else if (args[base].equals("-t")) {
-                mlst = true;
-                minParams = 3;
-            }
-            else if (args[base].equals("-w")) {
-                controlKeepAliveReplyTimeout = Integer.parseInt(args[++base]);
-            }
-            else if (args[base].equals("-T")) {
-                trustmgr = args[++base];
-            }
-            else if (args[base].equals("-PrH")) {
-                proxyHost = args[++base]; 
-                String parts[] = proxyHost.split(":");
-                if (parts.length == 2){
-                    proxyHost=parts[0];
-                    proxyPort=Integer.parseInt(parts[1]);
-                }
-            }
-            else if (args[base].equals("-PrU")) {
-                proxyUser = args[++base];
-            }
-            else if (args[base].equals("-PrP")) {
-                proxyPassword = args[++base];
-            }
-            else if (args[base].equals("-#")) {
-                printHash = true;
-            }
-            else {
-                break;
+        OUTER:
+        for (base = 0; base < args.length; base++) {
+            switch (args[base]) {
+                case "-s":
+                    storeFile = true;
+                    break;
+                case "-a":
+                    localActive = true;
+                    break;
+                case "-b":
+                    binaryTransfer = true;
+                    break;
+                case "-c":
+                    doCommand = args[++base];
+                    minParams = 3;
+                    break;
+                case "-d":
+                    mlsd = true;
+                    minParams = 3;
+                    break;
+                case "-e":
+                    useEpsvWithIPv4 = true;
+                    break;
+                case "-f":
+                    feat = true;
+                    minParams = 3;
+                    break;
+                case "-h":
+                    hidden = true;
+                    break;
+                case "-k":
+                    keepAliveTimeout = Long.parseLong(args[++base]);
+                    break;
+                case "-l":
+                    listFiles = true;
+                    minParams = 3;
+                    break;
+                case "-L":
+                    lenient = true;
+                    break;
+                case "-n":
+                    listNames = true;
+                    minParams = 3;
+                    break;
+                case "-p":
+                    protocol = args[++base];
+                    break;
+                case "-t":
+                    mlst = true;
+                    minParams = 3;
+                    break;
+                case "-w":
+                    controlKeepAliveReplyTimeout = Integer.parseInt(args[++base]);
+                    break;
+                case "-T":
+                    trustmgr = args[++base];
+                    break;
+                case "-PrH":
+                    proxyHost = args[++base];
+                    String parts[] = proxyHost.split(":");
+                    if (parts.length == 2) {
+                        proxyHost = parts[0];
+                        proxyPort = Integer.parseInt(parts[1]);
+                    }
+                    break;
+                case "-PrU":
+                    proxyUser = args[++base];
+                    break;
+                case "-PrP":
+                    proxyPassword = args[++base];
+                    break;
+                case "-#":
+                    printHash = true;
+                    break;
+                default:
+                    break OUTER;
             }
         }
 
@@ -192,9 +189,9 @@ public final class FTPClientExample
         String server = args[base++];
         int port = 0;
         String parts[] = server.split(":");
-        if (parts.length == 2){
-            server=parts[0];
-            port=Integer.parseInt(parts[1]);
+        if (parts.length == 2) {
+            server = parts[0];
+            port = Integer.parseInt(parts[1]);
         }
         String username = args[base++];
         String password = args[base++];
@@ -210,12 +207,11 @@ public final class FTPClientExample
         }
 
         final FTPClient ftp;
-        if (protocol == null ) {
-            if(proxyHost !=null) {
+        if (protocol == null) {
+            if (proxyHost != null) {
                 System.out.println("Using HTTP proxy server: " + proxyHost);
                 ftp = new FTPHTTPClient(proxyHost, proxyPort, proxyUser, proxyPassword);
-            }
-            else {
+            } else {
                 ftp = new FTPClient();
             }
         } else {
@@ -256,37 +252,29 @@ public final class FTPClientExample
         // suppress login details
         ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
 
-        try
-        {
+        try {
             int reply;
             if (port > 0) {
                 ftp.connect(server, port);
             } else {
                 ftp.connect(server);
             }
-            System.out.println("Connected to " + server + " on " + (port>0 ? port : ftp.getDefaultPort()));
+            System.out.println("Connected to " + server + " on " + (port > 0 ? port : ftp.getDefaultPort()));
 
             // After connection attempt, you should check the reply code to verify
             // success.
             reply = ftp.getReplyCode();
 
-            if (!FTPReply.isPositiveCompletion(reply))
-            {
+            if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
                 System.err.println("FTP server refused connection.");
                 System.exit(1);
             }
-        }
-        catch (IOException e)
-        {
-            if (ftp.isConnected())
-            {
-                try
-                {
+        } catch (IOException e) {
+            if (ftp.isConnected()) {
+                try {
                     ftp.disconnect();
-                }
-                catch (IOException f)
-                {
+                } catch (IOException f) {
                     // do nothing
                 }
             }
@@ -295,11 +283,9 @@ public final class FTPClientExample
             System.exit(1);
         }
 
-__main:
-        try
-        {
-            if (!ftp.login(username, password))
-            {
+        __main:
+        try {
+            if (!ftp.login(username, password)) {
                 ftp.logout();
                 error = true;
                 break __main;
@@ -321,8 +307,7 @@ __main:
 
             ftp.setUseEPSVwithIPv4(useEpsvWithIPv4);
 
-            if (storeFile)
-            {
+            if (storeFile) {
                 InputStream input;
 
                 input = new FileInputStream(local);
@@ -330,88 +315,74 @@ __main:
                 ftp.storeFile(remote, input);
 
                 input.close();
-            }
-            else if (listFiles)
-            {
+            } else if (listFiles) {
                 if (lenient) {
                     FTPClientConfig config = new FTPClientConfig();
                     config.setLenientFutureDates(true);
-                    ftp.configure(config );
+                    ftp.configure(config);
                 }
 
                 for (FTPFile f : ftp.listFiles(remote)) {
                     System.out.println(f.getRawListing());
                     System.out.println(f.toFormattedString());
                 }
-            }
-            else if (mlsd)
-            {
+            } else if (mlsd) {
                 for (FTPFile f : ftp.mlistDir(remote)) {
                     System.out.println(f.getRawListing());
                     System.out.println(f.toFormattedString());
                 }
-            }
-            else if (mlst)
-            {
+            } else if (mlst) {
                 FTPFile f = ftp.mlistFile(remote);
-                if (f != null){
+                if (f != null) {
                     System.out.println(f.toFormattedString());
                 }
-            }
-            else if (listNames)
-            {
+            } else if (listNames) {
                 for (String s : ftp.listNames(remote)) {
                     System.out.println(s);
                 }
-            }
-            else if (feat)
-            {
+            } else if (feat) {
                 // boolean feature check
                 if (remote != null) { // See if the command is present
                     if (ftp.hasFeature(remote)) {
-                        System.out.println("Has feature: "+remote);
+                        System.out.println("Has feature: " + remote);
                     } else {
                         if (FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                            System.out.println("FEAT "+remote+" was not detected");
+                            System.out.println("FEAT " + remote + " was not detected");
                         } else {
-                            System.out.println("Command failed: "+ftp.getReplyString());
+                            System.out.println("Command failed: " + ftp.getReplyString());
                         }
                     }
 
                     // Strings feature check
-                    String []features = ftp.featureValues(remote);
+                    String[] features = ftp.featureValues(remote);
                     if (features != null) {
-                        for(String f : features) {
-                            System.out.println("FEAT "+remote+"="+f+".");
+                        for (String f : features) {
+                            System.out.println("FEAT " + remote + "=" + f + ".");
                         }
                     } else {
                         if (FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                            System.out.println("FEAT "+remote+" is not present");
+                            System.out.println("FEAT " + remote + " is not present");
                         } else {
-                            System.out.println("Command failed: "+ftp.getReplyString());
+                            System.out.println("Command failed: " + ftp.getReplyString());
                         }
                     }
                 } else {
                     if (ftp.features()) {
 //                        Command listener has already printed the output
                     } else {
-                        System.out.println("Failed: "+ftp.getReplyString());
+                        System.out.println("Failed: " + ftp.getReplyString());
                     }
                 }
-            }
-            else if (doCommand != null)
-            {
+            } else if (doCommand != null) {
                 if (ftp.doCommand(doCommand, remote)) {
 //                  Command listener has already printed the output
 //                    for(String s : ftp.getReplyStrings()) {
 //                        System.out.println(s);
 //                    }
                 } else {
-                    System.out.println("Failed: "+ftp.getReplyString());
+                    System.out.println("Failed: " + ftp.getReplyString());
                 }
-            }
-            else
-            {
+            } else {
                 OutputStream output;
 
                 output = new FileOutputStream(local);
@@ -424,28 +395,18 @@ __main:
             ftp.noop(); // check that control connection is working OK
 
             ftp.logout();
-        }
-        catch (FTPConnectionClosedException e)
-        {
+        } catch (FTPConnectionClosedException e) {
             error = true;
             System.err.println("Server closed connection.");
             e.printStackTrace();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             error = true;
             e.printStackTrace();
-        }
-        finally
-        {
-            if (ftp.isConnected())
-            {
-                try
-                {
+        } finally {
+            if (ftp.isConnected()) {
+                try {
                     ftp.disconnect();
-                }
-                catch (IOException f)
-                {
+                } catch (IOException f) {
                     // do nothing
                 }
             }
@@ -454,9 +415,10 @@ __main:
         System.exit(error ? 1 : 0);
     } // end main
 
-    private static CopyStreamListener createListener(){
-        return new CopyStreamListener(){
+    private static CopyStreamListener createListener() {
+        return new CopyStreamListener() {
             private long megsTotal = 0;
+
             public void bytesTransferred(CopyStreamEvent event) {
                 bytesTransferred(event.getTotalBytesTransferred(), event.getBytesTransferred(), event.getStreamSize());
             }
