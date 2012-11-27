@@ -7,8 +7,11 @@ package testing;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -21,7 +24,9 @@ public class FTPClientTesting {
     private static void listFromServerFTP() throws Exception{
         FTPClient client = new FTPClient();
         
-        client.connect("localhost");
+        client.setUseEPSVwithIPv4(true);
+        
+        client.connect(getIPAddress());
         client.login("adminroot", "adminroot");
         
         String[] names = client.listNames();
@@ -30,11 +35,15 @@ public class FTPClientTesting {
             System.out.println("Name: " + name);
         }
         
-        FTPFile[] ftpFiles = client.listFiles();
+        //FTPFile[] ftpFiles = client.listFiles();
+        FTPFile[] ftpFiles = client.mlistDir("\\");
         
         for(FTPFile ff : ftpFiles){
             if(ff.getType() == FTPFile.FILE_TYPE){
-                System.out.println("File Name: "+ ff.getName() 
+                System.out.println("File Name: "+ ff.getName() + "  Type: " + ff.getType() 
+                        + ";;;; " + FileUtils.byteCountToDisplaySize(ff.getSize()));
+            }else{
+                System.out.println("Directory Name: "+ ff.getName() + "  Type: " + ff.getType() 
                         + ";;;; " + FileUtils.byteCountToDisplaySize(ff.getSize()));
             }
         }
@@ -72,6 +81,8 @@ public class FTPClientTesting {
         String local = ".\\FTPServer2\\UPLOADER.txt";
         String remote = "UPLOADER.txt";
         
+        client.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+        
         fis = new FileInputStream(local);
         client.storeFile(remote, fis);
         
@@ -81,12 +92,18 @@ public class FTPClientTesting {
         client.disconnect();
     }
     
+    private static String getIPAddress() throws UnknownHostException{
+        InetAddress localhost = InetAddress.getLocalHost();
+        
+        return localhost.getHostAddress();
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
         
-        //listFromServerFTP();
+        listFromServerFTP();
         //downloadFromServerFTP();
         //uploadToServerFTP();
     }
