@@ -93,7 +93,7 @@ public class FTPClientTesting {
     }
     
     private static String getIPAddress() throws UnknownHostException{
-        InetAddress localhost = InetAddress.getLocalHost();
+        InetAddress localhost = InetAddress.getByName("QoS-PC");
         
         return localhost.getHostAddress();
     }
