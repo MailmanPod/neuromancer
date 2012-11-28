@@ -71,7 +71,7 @@ public class FTPClientTesting {
         client.disconnect();
     }
     
-    private static void uploadToServerFTP() throws Exception{
+    private static void uploadToServerFTP() throws SocketException, IOException{
         FTPClient client = new FTPClient();
         FileInputStream fis = null;
         

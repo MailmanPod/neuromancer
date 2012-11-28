@@ -11,6 +11,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.quartz.Job;
+import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -23,6 +24,9 @@ public class MailJob implements Job{
     public void execute(JobExecutionContext jec) throws JobExecutionException {
         try
         {
+            
+            JobDetail detalle = jec.getJobDetail();
+            String nombre = (String) detalle.getJobDataMap().get("nombre_persona");
             // Propiedades de la conexión
             System.out.println
             ("-------------Inicializando Propiedades del Mail---------");
@@ -48,7 +52,7 @@ public class MailJob implements Job{
                 new InternetAddress("brueradamian@gmail.com"));
             message.setSubject("System Configuration");
             message.setText(
-                "Otra prueba de que esto funciona");
+                "Otra prueba de que esto funciona + " + nombre);
 
             // Lo enviamos.
             System.out.println

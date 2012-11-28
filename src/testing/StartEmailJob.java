@@ -9,6 +9,7 @@ import static org.quartz.DateBuilder.*;
 
 import java.util.Date;
 import java.util.logging.Level;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -42,9 +43,12 @@ public class StartEmailJob {
         System.out.println
         ("------- Scheduling Job  -------------------");
 
+        JobDataMap map = new JobDataMap();
+        map.put("nombre_persona", "El pulpito asesino");
         // define the job and tie it to our HelloJob class
         JobDetail job = newJob(MailJob.class)
             .withIdentity("job1", "group1")
+                .usingJobData(map)
             .build();
         
         // Trigger the job to run on the next round minute
