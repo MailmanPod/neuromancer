@@ -19,17 +19,16 @@ import org.quartz.JobExecutionException;
  *
  * @author Quality of Service
  */
-public class MailJob implements Job{
+public class MailJob implements Job {
+
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
-        try
-        {
-            
+        try {
+
             JobDetail detalle = jec.getJobDetail();
             String nombre = (String) detalle.getJobDataMap().get("nombre_persona");
             // Propiedades de la conexión
-            System.out.println
-            ("-------------Inicializando Propiedades del Mail---------");
+            System.out.println("-------------Inicializando Propiedades del Mail---------");
             Properties props = new Properties();
             props.setProperty("mail.smtp.host", "smtp.gmail.com");
             props.setProperty("mail.smtp.starttls.enable", "true");
@@ -38,40 +37,32 @@ public class MailJob implements Job{
             props.setProperty("mail.smtp.auth", "true");
 
             // Preparamos la sesion
-            System.out.println
-            ("-----------Inicializamos la Sesion-----------");
+            System.out.println("-----------Inicializamos la Sesion-----------");
             Session session = Session.getDefaultInstance(props);
 
             // Construimos el mensaje
-            System.out.println
-            ("---------Construimos el mensaje--------");
+            System.out.println("---------Construimos el mensaje--------");
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress("bruera@noreply.com"));
             message.addRecipient(
-                Message.RecipientType.TO,
-                new InternetAddress("brueradamian@gmail.com"));
+                    Message.RecipientType.TO,
+                    new InternetAddress("brueradamian@gmail.com"));
             message.setSubject("System Configuration");
             message.setText(
-                "Otra prueba de que esto funciona + " + nombre);
+                    "Otra prueba de que esto funciona + " + nombre);
 
             // Lo enviamos.
-            System.out.println
-            ("-------Enviamos el mansaje al servidor smtp--------");
+            System.out.println("-------Enviamos el mansaje al servidor smtp--------");
             Transport t = session.getTransport("smtp");
             t.connect("brueradamian@gmail.com", "www.640intelPRO.net");
             t.sendMessage(message, message.getAllRecipients());
 
             // Cierre.
-            System.out.println
-            ("-----------Cerramos la coneccion, mensaje a fue enviado--------");
+            System.out.println("-----------Cerramos la coneccion, mensaje a fue enviado--------");
             t.close();
-        }
-        catch (Exception e)
-        {
-            System.out.println
-            ("-------Exception la puta madre!!!!-------");
+        } catch (Exception e) {
+            System.out.println("-------Exception la puta madre!!!!-------");
             e.printStackTrace();
         }
     }
-    
 }
