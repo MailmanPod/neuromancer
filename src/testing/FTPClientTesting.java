@@ -36,7 +36,7 @@ public class FTPClientTesting {
         }
 
         //FTPFile[] ftpFiles = client.listFiles();
-        FTPFile[] ftpFiles = client.mlistDir("\\");
+        FTPFile[] ftpFiles = client.mlistDir("/");
 
         for (FTPFile ff : ftpFiles) {
             if (ff.getType() == FTPFile.FILE_TYPE) {
@@ -103,8 +103,8 @@ public class FTPClientTesting {
      */
     public static void main(String[] args) throws Exception {
 
-        //listFromServerFTP();
-        downloadFromServerFTP();
+        listFromServerFTP();
+        //downloadFromServerFTP();
         //uploadToServerFTP();
     }
 }
