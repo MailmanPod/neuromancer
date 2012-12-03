@@ -54,7 +54,7 @@ public class MailJob implements Job {
             // Lo enviamos.
             System.out.println("-------Enviamos el mansaje al servidor smtp--------");
             Transport t = session.getTransport("smtp");
-            t.connect("brueradamian@gmail.com", "www.640intelPRO.net");
+            t.connect("brueradamian@gmail.com", "null");
             t.sendMessage(message, message.getAllRecipients());
 
             // Cierre.
